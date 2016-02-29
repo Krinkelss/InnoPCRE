@@ -155,8 +155,6 @@ int dosearch( const char *stuff, int OffSet )
 {
 	num_matches = 0;
 
-	Msg( "NextPos", "OffSet = %d", OffSet );
-
 	memset( regtest_buf32, 0, sizeof( regtest_buf32 ) );
 
 	length32 = copy_char8_to_char32( ( PCRE2_SPTR8 )stuff, regtest_buf32, REGTEST_MAX_LENGTH32 ); // Текст для обработки

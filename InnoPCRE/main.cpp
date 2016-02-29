@@ -100,7 +100,6 @@ void __stdcall pcredeInitialize( void )
 	pcre2_code_free_8( p_pcre2 );
 	pcre2_match_data_free_8( match_data );
 	pcre2_match_context_free_8( mcontext32 );
-	//pcre2_substring_list_free_8( ( PCRE2_UCHAR8 * )stringlist );
 	pcre2_substring_list_free_8( ( PCRE2_SPTR8 * )stringlist );
 
 	if( Result_t != NULL )
@@ -109,7 +108,6 @@ void __stdcall pcredeInitialize( void )
 
 BOOL Compile( int flags )
 {
-	//memset( regtest_buf32, 0, sizeof( regtest_buf32 ) );
 	convert_utf8_to_utf32( ( PCRE2_SPTR8 )_expression, regtest_buf32, NULL, REGTEST_MAX_LENGTH32 ); // Сам regexp
 
 	ccontext32 = pcre2_compile_context_create_8( NULL );
@@ -131,8 +129,6 @@ BOOL Compile( int flags )
 	}
 
 	pcre2_compile_context_free_8( ccontext32 );
-
-	//setstack32( NULL );
 
 	match_data = pcre2_match_data_create_8( ( uint32_t )p_pcre2, NULL );	
 	mcontext32 = pcre2_match_context_create_8( NULL );
@@ -177,7 +173,6 @@ int dosearch( const char *stuff, int OffSet )
 
 		num_matches = errorcode;
 
-		//Result_t = new std::vector<std::string>;
 		Result_t = ( List_t * )List_Init();
 
 		PCRE2_SIZE *ovector = pcre2_get_ovector_pointer_8( match_data );
@@ -208,18 +203,12 @@ int dosearch( const char *stuff, int OffSet )
 // Возвращает результат поиска. 0 - общий результать. Если скобок несколько, то нужно ставить число больше нуля, но не превышающее значение возвращаемое AllMatch()
 char * __stdcall get_match( int pos )
 {
-	//Msg( "get_match", "pos = %d", pos );
-	//Msg( "!!!", "Result_t->Str[ pos ] = %s", Result_t->Str[ pos ] );
-	
 	if( pos >= 0 && pos < num_matches ) 
 	{
-		//std::vector<std::string>::iterator P = Result_t->begin() + pos;
-		//Msg( "!!!", "num_matches = %s", ( char * )Result_t-> );
 		return Result_t->Str[ pos ];
 	}
 	else 
 	{
-		//throw exception("Pcre2::get_match( int ): out of range");
 		Msg( "Error", "get_match( int ): out of range" );
 		return NULL;
 	}

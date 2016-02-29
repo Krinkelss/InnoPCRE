@@ -1,0 +1,9 @@
+LIBRARY
+
+EXPORTS
+pcreInitialize					@1
+pcredeInitialize				@2
+search							@3
+AllMatch						@4
+get_match						@5
+NextPos							@6

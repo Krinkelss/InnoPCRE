@@ -1,10 +1,10 @@
-#include <windows.h>
+ï»¿#include <windows.h>
 #include "pcrepp.h"
 #include "Error.h"
 
-// Èíèöèàëèçàöèÿ
-// mPattern - ñàìî âûðàæåíèå
-// flags - ôëàãè
+// Ð˜Ð½Ð¸Ñ†Ð¸Ð°Ð»Ð¸Ð·Ð°Ñ†Ð¸Ñ
+// mPattern - ÑÐ°Ð¼Ð¾ Ð²Ñ‹Ñ€Ð°Ð¶ÐµÐ½Ð¸Ðµ
+// flags - Ñ„Ð»Ð°Ð³Ð¸
 Pcre *mRegEx;
 
 void __stdcall pcreInitialize( char *mPattern, char *flags )
@@ -12,14 +12,14 @@ void __stdcall pcreInitialize( char *mPattern, char *flags )
 	mRegEx = new Pcre( mPattern, flags );
 }
 
-// Ïîñëå ðàáîòû îñâîáîæäàåì ðåñóðñû
+// ÐŸÐ¾ÑÐ»Ðµ Ñ€Ð°Ð±Ð¾Ñ‚Ñ‹ Ð¾ÑÐ²Ð¾Ð±Ð¾Ð¶Ð´Ð°ÐµÐ¼ Ñ€ÐµÑÑƒÑ€ÑÑ‹
 void __stdcall pcredeInitialize( void )
 {
 	if( mRegEx )
 		delete mRegEx;
 }
 
-// Ïåðåçàïèñûâàåì òåêóùåå ðåãóëÿðíîå âûðàæåíèå
+// ÐŸÐµÑ€ÐµÐ·Ð°Ð¿Ð¸ÑÑ‹Ð²Ð°ÐµÐ¼ Ñ‚ÐµÐºÑƒÑ‰ÐµÐµ Ñ€ÐµÐ³ÑƒÐ»ÑÑ€Ð½Ð¾Ðµ Ð²Ñ‹Ñ€Ð°Ð¶ÐµÐ½Ð¸Ðµ
 void __stdcall pcreReInitialize( char *mPattern, char *flags )
 {
 	if( mRegEx )
@@ -31,50 +31,50 @@ void __stdcall pcreReInitialize( char *mPattern, char *flags )
 		mRegEx = new Pcre( mPattern, ( char * )flags );
 }
 
-// Ïîèñê ñ óêàçàíèåì ñìåùåíèÿ
+// ÐŸÐ¾Ð¸ÑÐº Ñ ÑƒÐºÐ°Ð·Ð°Ð½Ð¸ÐµÐ¼ ÑÐ¼ÐµÑ‰ÐµÐ½Ð¸Ñ
 int __stdcall pcreSearchOffset( const char *stuff, int OffSet )
 {
 	return mRegEx->search( stuff, OffSet );
 }
 
-// Ïîèñê
+// ÐŸÐ¾Ð¸ÑÐº
 int __stdcall pcreSearch( const char *stuff )
 {
 	return mRegEx->search( stuff );
 }
 
-// Çàìåíà. [Òåêñò äëÿ çàìåíû] [×òî] [×åì] [Ôëàãè]
+// Ð—Ð°Ð¼ÐµÐ½Ð°. [Ð¢ÐµÐºÑÑ‚ Ð´Ð»Ñ Ð·Ð°Ð¼ÐµÐ½Ñ‹] [Ð§Ñ‚Ð¾] [Ð§ÐµÐ¼] [Ð¤Ð»Ð°Ð³Ð¸]
 char* __stdcall pcreReplace( const char *stuff, const char *Then, const char *Thef, const char *flag )
 {
 	return mRegEx->Replace( stuff, Then, Thef, flag );
 }
 
-// Ðåçóëüòàò ðàáîòû ôóíêöèè Compile. Åñëè -1 òî êàêàÿ òî îøèáêà
+// Ð ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚ Ñ€Ð°Ð±Ð¾Ñ‚Ñ‹ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¸ Compile. Ð•ÑÐ»Ð¸ -1 Ñ‚Ð¾ ÐºÐ°ÐºÐ°Ñ Ñ‚Ð¾ Ð¾ÑˆÐ¸Ð±ÐºÐ°
 int __stdcall pcreResultCompile()
 {
 	return mRegEx->ResultCompile();
 }
 
-// Âîçâðàùàåò ñìåùåíèå â òåêñòå
+// Ð’Ð¾Ð·Ð²Ñ€Ð°Ñ‰Ð°ÐµÑ‚ ÑÐ¼ÐµÑ‰ÐµÐ½Ð¸Ðµ Ð² Ñ‚ÐµÐºÑÑ‚Ðµ
 int __stdcall pcreNextPos()
 {
 	return mRegEx->NextPos();
 }
 
-// Âîçâðàùàåò ñìåùåíèå â òåêñòå
+// Ð’Ð¾Ð·Ð²Ñ€Ð°Ñ‰Ð°ÐµÑ‚ ÑÐ¼ÐµÑ‰ÐµÐ½Ð¸Ðµ Ð² Ñ‚ÐµÐºÑÑ‚Ðµ
 char* __stdcall pcreResult()
 {
 //	MessageBoxA( 0, mRegEx->Result(), "", NULL );
 	return ( char * )mRegEx->Result();
 }
 
-// Íà÷àëî ñìåùåíèÿ äëÿ îáðàáîòêè
+// ÐÐ°Ñ‡Ð°Ð»Ð¾ ÑÐ¼ÐµÑ‰ÐµÐ½Ð¸Ñ Ð´Ð»Ñ Ð¾Ð±Ñ€Ð°Ð±Ð¾Ñ‚ÐºÐ¸
 int __stdcall pcreStartMatch()
 {
 	return mRegEx->get_match_start();
 }
 
-// Âîçâðàùàåò ñìåùåíèå â òåêñòå
+// Ð’Ð¾Ð·Ð²Ñ€Ð°Ñ‰Ð°ÐµÑ‚ ÑÐ¼ÐµÑ‰ÐµÐ½Ð¸Ðµ Ð² Ñ‚ÐµÐºÑÑ‚Ðµ
 int __stdcall pcreMatchEnd()
 {
 	return mRegEx->get_match_end();

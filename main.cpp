@@ -47,11 +47,10 @@ void __stdcall pcreReInitialize( char *mPattern, char *flags )
 {
 	if( mRegEx )
 	{
-		delete mRegEx;
-		mRegEx = new Pcre( mPattern, ( char * )flags );
+		mRegEx->operator=( mPattern );
 	}
 	else
-		mRegEx = new Pcre( mPattern, ( char * )flags );
+		mRegEx = new Pcre( mPattern );
 }
 
 // Поиск с указанием смещения
@@ -67,7 +66,7 @@ int __stdcall pcreSearch( const char *stuff )
 }
 
 // Замена. [Текст для замены] [Что] [Чем] [Флаги]
-char* __stdcall pcreReplace( const char *stuff, const char *Then, const char *Thef, const char *flag )
+char* __stdcall pcreReplace( char *stuff, char *Then, char *Thef, char *flag )
 {
 	return mRegEx->Replace( stuff, Then, Thef, flag );
 }

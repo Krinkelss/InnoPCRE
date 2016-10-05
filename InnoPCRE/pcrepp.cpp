@@ -26,10 +26,11 @@
 
 Pcre::Pcre( const std::string& expression, char *flags )
 {
+	FLAG = 0;
 	Zero();
 	_expression = expression;
 	FLAG = GetFlags( flags );
-	Compile( GetFlags( flags ) );
+	Compile( FLAG );
 }
 
 Pcre::Pcre( const std::string& expression )
@@ -37,6 +38,14 @@ Pcre::Pcre( const std::string& expression )
 	Zero();
 	_expression = expression;
 	Compile( 0 );
+}
+
+const Pcre& Pcre::operator = ( const std::string& expression )
+{
+	Zero();
+	_expression = expression;
+	Compile( FLAG );
+	return *this;
 }
 
 Pcre::~Pcre()
@@ -88,8 +97,6 @@ void Pcre::Compile( UINT flags )
 
 int Pcre::dosearch( const std::string& stuff, int OffSet )
 {
-	reset();
-
 	memset( regtest_buf32, 0, REGTEST_MAX_LENGTH8 );
 
 	int length32 = copy_char8_to_char32( ( PCRE2_SPTR8 )stuff.c_str(), regtest_buf32, 4096 );
@@ -140,8 +147,8 @@ int Pcre::dosearch( const std::string& stuff, int OffSet )
 	return 0;
 }
 
-char *Pcre::Replace( std::string Str, std::string Then, std::string That, std::string flag )
-{
+char *Pcre::Replace( std::string Str, std::string Then, std::string That, char *flag )
+{	
 	std::string::size_type p_open, p_close;
 	Replaced = Str;
 
@@ -154,7 +161,9 @@ char *Pcre::Replace( std::string Str, std::string Then, std::string That, std::s
 
 	Zero();
 
-	Compile( GetFlags( ( char * )flag.c_str() ) );
+	int Num = GetFlags( flag );
+
+	Compile( Num );
 
 	if( mResult == -1 )
 		return "";
@@ -172,23 +181,27 @@ char *Pcre::Replace( std::string Str, std::string Then, std::string That, std::s
 }
 
 UINT Pcre::GetFlags( char *flags )
-{
-	FLAG = 0;
+{	
+	int result = 0;
 
+	if( !flags )
+		return 0;
+	
 	int flaglen = strlen( flags );
 
 	for( int flag = 0; flag < flaglen; flag++ )
 	{
 		switch( flags[ flag ] )
 		{
-			case 'i': FLAG |= PCRE2_CASELESS;					break;		// Do caseless matching
-			case 'm': FLAG |= PCRE2_MULTILINE;					break;		// ^ and $ match newlines within data
-			case 's': FLAG |= PCRE2_DOTALL;						break;		// . matches anything including NL
-			case 'x': FLAG |= PCRE2_EXTENDED;					break;		// Ignore white space and # comments
-			case 'u': FLAG |= PCRE2_UTF | PCRE2_UCP;			break;		// Treat pattern and subjects as UTF strings
+			case 'i': result |= PCRE2_CASELESS;					break;		// Do caseless matching
+			case 'm': result |= PCRE2_MULTILINE;				break;		// ^ and $ match newlines within data
+			case 's': result |= PCRE2_DOTALL;					break;		// . matches anything including NL
+			case 'x': result |= PCRE2_EXTENDED;					break;		// Ignore white space and # comments
+			case 'u': result |= PCRE2_UTF | PCRE2_UCP;			break;		// Treat pattern and subjects as UTF strings
 		}
 	}
-	return FLAG;
+
+	return result;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -239,12 +252,6 @@ void Pcre::Zero( void )
 	match_data = NULL;
 	errorcode = NULL;
 	erroroffset = NULL;
-}
-
-void Pcre::reset()
-{
-	//	did_match = FALSE;
-	num_matches = -1;
 }
 
 int Pcre::copy_char8_to_char32( PCRE2_SPTR8 input, PCRE2_UCHAR8 *output, int max_length )

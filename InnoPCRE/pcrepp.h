@@ -39,6 +39,7 @@ class Pcre
 public:
 	Pcre( const std::string& expression, char *flags );
 	Pcre( const std::string& expression );
+	const Pcre& operator = ( const std::string& expression );
 	~Pcre();
 
 	int search( const std::string& stuff, int OffSet );
@@ -51,12 +52,11 @@ public:
 	int get_match_start( void );
 	int get_match_end( void );
 
-	char *Replace( std::string Str, std::string Then, std::string That, std::string flag );
+	char *Replace( std::string Str, std::string Then, std::string That, char *flag );
 
 private:
 	void Compile( UINT flags );
 	void Zero( void );
-	void reset();
 	UINT GetFlags( char *flags );
 	int dosearch( const std::string& stuff, int OffSet );
 	int copy_char8_to_char32( PCRE2_SPTR8 input, PCRE2_UCHAR8 *output, int max_length );
